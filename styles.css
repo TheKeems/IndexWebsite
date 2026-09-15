@@ -1,0 +1,88 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Pixelify Sans", sans-serif;
+  background-color: #000000;
+  color: #86bada;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.container {
+  text-align: center;
+}
+
+.load-in-text {
+  font-family: "Pixelify Sans", sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px #86bada9a,
+    0 0 20px #86bada4f;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: customLoadIn 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.subtext {
+  font-family: "Pixelify Sans", sans-serif;
+  font-size: 1.2rem;
+  margin-top: 15px;
+  color: #86bada9a;
+  opacity: 0;
+  transform: translateY(15px);
+  animation: customLoadIn 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  animation-delay: 0.4s;
+}
+
+.fadeimg{
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+  width: auto;
+  height: auto;
+}
+
+.fadeimg.loaded{
+  opacity: 1;
+}
+
+.pixelify-sans-txt{
+  font-family: "Pixelify Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.prescript {
+  font-family: "Pixelify Sans", sans-serif;
+  margin-top: 15px;
+  opacity: 0;
+  transform: translateY(15px);
+  animation: customLoadIn 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  /* color: #86bada9a; */
+}
+
+.prescript.text {
+  font-size: 1.2rem;
+  color: #86bada;
+}
+
+.prescript.header{
+  font-size: 3rem;
+  /* opacity: 1; */
+}
+
+@keyframes customLoadIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
