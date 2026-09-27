@@ -5,11 +5,44 @@ const getType = obj => Object.prototype.toString.call(obj).slice(8, -1);
 document.addEventListener("DOMContentLoaded", () => {
     const prescriptTexts = document.querySelectorAll('.prescript');
     writeText(prescriptTexts, 35);
+
+    makeText(1);
+    makeText(1);
+    makeText(1);
+    makeText(1);
     makeText(1);
 });
 
 function randInt(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
+}
+
+//i dont need this to be super efficient since im realistically only using this for vw so this is gonna go up to 100
+function randIntIntervals(min, max, intervals){
+    const range = Array(max - min + 1).fill(0);
+    intervals.sort((a, b) => a[0] - b[0]);
+
+    for (const key in intervals) {
+        if(intervals[key][0] >= min){
+            range[intervals[key][0] - min]++;
+        }
+        if(intervals[key][1] <= max){
+            range[intervals[key][1] - min]--;
+        }
+    }
+
+    let psum = 0;
+    const valid = [];
+    for (let i = min; i <= max; i++) {
+        psum += range[i - min];
+        
+        if(psum == 0){
+            valid.push(i);
+        }
+    }
+
+    
+    return valid[randInt(0, valid.length)];
 }
 
 async function writeText(e, interval) {
@@ -49,14 +82,13 @@ async function continueSingleText(t, interval) {
 
     value[0].textContent = value[1].substring(0, value[1].length - temp.length) + temp.substring(0, Math.min(8, temp.length));
     if (temp.length == 0) {
-        console.log("finished");
+        //timeout before bg prescript disappears
         setTimeout(finishText, 1000, value[0], 1);
         delete bgDict[cur_key];
         return;
     }
     else {
         bgDict[temp] = [value[0], value[1]];
-
     }
     delete bgDict[cur_key];
     setTimeout(continueSingleText, interval, temp, interval);
@@ -81,6 +113,7 @@ async function continueText(p, interval) {
     setTimeout(continueText, interval, p, interval);
 }
 
+
 async function makeText(size) {
     const cur_text = document.createElement("div");
 
@@ -92,12 +125,25 @@ async function makeText(size) {
 
     cur_text.className = "bgtext";
 
+    const par = randInt(0, 1);
+
+    if(!par){
+        cur_text.style.left = `${randIntIntervals(0, 100, [[40, 70], [85, 100]])}vw`;
+        cur_text.style.top = `${randIntIntervals(0, 100, [[90, 100]])}vw`;
+    }
+    else{
+        cur_text.style.left = `${randIntIntervals(0, 100, [[85, 100]])}vw`;
+        cur_text.style.top = `${randIntIntervals(0, 100, [[30, 70], [90, 100]])}vw`;
+    }
+
+    
     cur_text.style.left = `${randInt(0, window.innerWidth - cur_text.offsetWidth)}px`;
     cur_text.style.top = `${randInt(0, window.innerHeight - cur_text.offsetHeight)}px`;
 
     document.body.appendChild(cur_text);
 
     setTimeout(writeSingleText, randInt(100, 200), cur_text, 35);
+    setTimeout(makeText, randInt(1000, 2000), 2);
 }
 
 async function finishText(element, i) {
@@ -110,4 +156,11 @@ async function finishText(element, i) {
     if (i < 8) {
         setTimeout(finishText, 35, element, i + 1);
     }
+    else{
+        setTimeout(removeDiv, 1000, element);
+    }
+}
+
+async function removeDiv(element){
+    element.remove();
 }
