@@ -2,6 +2,48 @@ const prescriptDict = {};
 const bgDict = {};
 const getType = obj => Object.prototype.toString.call(obj).slice(8, -1);
 
+const pendingTimers = new Map();
+let nextTimerId = 0;
+let paused = document.hidden;
+
+function pTimeout(fn, delay, ...args) {
+    const id = nextTimerId++;
+    const timer = {fn, args, remaining: delay, start: Date.now(), handle: null};
+    pendingTimers.set(id, timer);
+
+    if (!paused) {
+        timer.handle = setTimeout(fire, delay, id);
+    }
+
+    return id;
+}
+
+function fire(id) {
+    const timer = pendingTimers.get(id);
+    pendingTimers.delete(id);
+    timer.fn(...timer.args);
+}
+
+document.addEventListener("visibilitychange", () => {
+    const now = Date.now();
+
+    if (document.hidden) {
+        paused = true;
+        pendingTimers.forEach(timer => {
+            clearTimeout(timer.handle);
+            timer.handle = null;
+            timer.remaining = Math.max(0, timer.remaining - (now - timer.start));
+        });
+    }
+    else {
+        paused = false;
+        pendingTimers.forEach((timer, id) => {
+            timer.start = now;
+            timer.handle = setTimeout(fire, timer.remaining, id);
+        });
+    }
+});
+
 document.addEventListener("DOMContentLoaded", () => {
     const prescriptTexts = document.querySelectorAll('.prescript');
     writeText(prescriptTexts, 35);
@@ -83,7 +125,7 @@ async function continueSingleText(t, interval) {
     value[0].textContent = value[1].substring(0, value[1].length - temp.length) + temp.substring(0, Math.min(8, temp.length));
     if (temp.length == 0) {
         //timeout before bg prescript disappears
-        setTimeout(finishText, 1000, value[0], 1);
+        pTimeout(finishText, 1000, value[0], 1);
         delete bgDict[cur_key];
         return;
     }
@@ -91,7 +133,7 @@ async function continueSingleText(t, interval) {
         bgDict[temp] = [value[0], value[1]];
     }
     delete bgDict[cur_key];
-    setTimeout(continueSingleText, interval, temp, interval);
+    pTimeout(continueSingleText, interval, temp, interval);
 }
 
 async function continueText(p, interval) {
@@ -110,7 +152,7 @@ async function continueText(p, interval) {
         delete prescriptDict[cur_key];
     });
 
-    setTimeout(continueText, interval, p, interval);
+    pTimeout(continueText, interval, p, interval);
 }
 
 
@@ -137,13 +179,13 @@ async function makeText(size) {
     }
 
     
-    cur_text.style.left = `${randInt(0, window.innerWidth - cur_text.offsetWidth)}px`;
-    cur_text.style.top = `${randInt(0, window.innerHeight - cur_text.offsetHeight)}px`;
+    //cur_text.style.left = `${randInt(0, window.innerWidth - cur_text.offsetWidth)}px`;
+    //cur_text.style.top = `${randInt(0, window.innerHeight - cur_text.offsetHeight)}px`;
 
     document.body.appendChild(cur_text);
 
-    setTimeout(writeSingleText, randInt(100, 200), cur_text, 35);
-    setTimeout(makeText, randInt(1000, 2000), 2);
+    pTimeout(writeSingleText, randInt(100, 200), cur_text, 35);
+    pTimeout(makeText, randInt(1000, 2000), 2);
 }
 
 async function finishText(element, i) {
@@ -154,10 +196,10 @@ async function finishText(element, i) {
     }
     element.textContent = s.substring(0, i) + temp.substring(0, 8 - i);
     if (i < 8) {
-        setTimeout(finishText, 35, element, i + 1);
+        pTimeout(finishText, 35, element, i + 1);
     }
     else{
-        setTimeout(removeDiv, 1000, element);
+        pTimeout(removeDiv, 1000, element);
     }
 }
 

@@ -15,9 +15,21 @@ body {
   overflow: hidden;
 }
 
+.bg-rect{
+  position: absolute;
+  background-color: #000000;
+  box-shadow: 0 0 15px 3px #86bada;
+  outline: 3px solid #6c98b3;
+  width: 750px;
+  height: 575px;
+  align-self: center;
+  z-index: 2;
+}
+
 .container {
   text-align: center;
   align-items: center; 
+  z-index: 3;
 }
 
 .container-side{
@@ -81,6 +93,12 @@ body {
   position: absolute;
   font-size: 1.5rem;
   color: #5b7d93;
+  z-index: 1;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .prescript.text {
