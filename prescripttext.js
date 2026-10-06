@@ -206,3 +206,10 @@ async function finishText(element, i) {
 async function removeDiv(element){
     element.remove();
 }
+
+function switchTab(targetId) {
+  const tabs = document.querySelectorAll('.tab-content');
+  tabs.forEach(tab => tab.classList.remove('active'));
+  document.getElementById(targetId).classList.add('active');
+  document.getElementById('fadeimg').classList.remove('loaded');
+}

@@ -13,15 +13,24 @@
 <body>
     <div class="bg-rect"></div>
     <div class="container">
-        <img class="fadeimg" 
-             src="index.webp"
-             onload="this.classList.add('loaded')"
-        >
-        <h1 class="prescript header">Welcome, Proselyte</h1>
-        <p class="prescript text">Select your preferred method of contacting your prescript device.</p>
-        <div class="container-side">
-            <button class="prescript button" onclick="yourFunction()">Direct Connection</button>
-            <button class="prescript button" onclick="yourFunction()">Server Fetch</button>
+        <div id="home" class="tab-content active">
+            <img class="fadeimg" 
+                src="index.webp"
+            >
+            <h1 class="prescript header">Welcome, Proselyte</h1>
+            <p class="prescript text">Select your preferred method of contacting your prescript device.</p>
+            <div class="container-side">
+                <button class="prescript button" onclick="switchTab('direct')">Direct Connection</button>
+                <button class="prescript button" onclick="yourFunction()">Server Fetch</button>
+            </div>
+        </div>
+        <div id="direct" class="tab-content">
+            <h1 class="prescript header">Welcome, tubbs</h1>
+            <p class="prescript text">Select your preferred method of contacting your prescript device.</p>
+            <div class="container-side">
+                <button class="prescript button" onclick="switchTab('home')">Direct Connection</button>
+                <button class="prescript button" onclick="yourFunction()">Server Fetch</button>
+            </div>
         </div>
     </div>
 </body>

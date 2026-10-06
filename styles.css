@@ -39,6 +39,14 @@ body {
   overflow: hidden
 }
 
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
 .load-in-text {
   font-family: "Pixelify Sans", sans-serif;
   font-size: 3rem;
@@ -64,13 +72,10 @@ body {
 
 .fadeimg{
   opacity: 0;
-  transition: opacity 1.5s ease-in-out;
+  transform: translateY(15px);
+  animation: customLoadIn 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
   width: auto;
   height: auto;
-}
-
-.fadeimg.loaded{
-  opacity: 1;
 }
 
 .pixelify-sans-txt{
