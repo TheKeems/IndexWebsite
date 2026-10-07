@@ -29,6 +29,8 @@ body {
 .container {
   text-align: center;
   align-items: center; 
+  max-width: 750px;
+  max-height: 575px;
   z-index: 3;
 }
 

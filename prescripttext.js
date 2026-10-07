@@ -1,5 +1,6 @@
 const prescriptDict = {};
 const bgDict = {};
+const ogSwitchTab = window.switchTab;
 const getType = obj => Object.prototype.toString.call(obj).slice(8, -1);
 
 const pendingTimers = new Map();
@@ -44,9 +45,27 @@ document.addEventListener("visibilitychange", () => {
     }
 });
 
+
+window.switchTab = function(...args) {
+    console.log();
+    if(Object.keys(prescriptDict).length === 0){
+        const res = ogSwitchTab.apply(this, args);
+        const prescriptTexts = document.querySelectorAll('.prescript');
+        writeText(prescriptTexts, 30);
+
+    //   const event = new CustomEvent('tabChange', { detail: { args } });
+    //   window.dispatchEvent(event);
+        return res;
+    }
+}
+
+// window.addEventListener('tabChange', (event) => {
+
+// });
+
 document.addEventListener("DOMContentLoaded", () => {
     const prescriptTexts = document.querySelectorAll('.prescript');
-    writeText(prescriptTexts, 35);
+    writeText(prescriptTexts, 30);
 
     makeText(1);
     makeText(1);
@@ -151,8 +170,9 @@ async function continueText(p, interval) {
         }
         delete prescriptDict[cur_key];
     });
-
-    pTimeout(continueText, interval, p, interval);
+    if(p > 0){
+        pTimeout(continueText, interval, p, interval);
+    }
 }
 
 
@@ -211,5 +231,4 @@ function switchTab(targetId) {
   const tabs = document.querySelectorAll('.tab-content');
   tabs.forEach(tab => tab.classList.remove('active'));
   document.getElementById(targetId).classList.add('active');
-  document.getElementById('fadeimg').classList.remove('loaded');
 }
